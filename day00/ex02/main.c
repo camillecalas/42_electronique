@@ -31,16 +31,18 @@ In summary, the line of code PORTB ^= (1 << PB0) toggles the state of the first 
 
 int main() 
 {
-    DDRB |= (1 << PIN0);
+    DDRB |= (1 << PB0);
+ 
 
     // Boucle infinie
     while (1)
     {
         // Dans la boucle infinie, nous alternons l'état de la LED D1 en utilisant l'opération bitwise XOR (^) avec la valeur 1 décalée de PB0 (1 << PB0).
-        PORTB ^= (1 << PIN0);
+        PORTB ^= (1 << PB0);
 
         // Attendre 500ms
-        for (long i = 0; i < 12500; i++);
+        // 4 instructions par seconde et diviser par 2 car 0,5sec
+        for (long i = 0; i < (F_CPU/2)/4; i++); 
     }
 
     return 0;

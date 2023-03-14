@@ -2,62 +2,36 @@
 #include <util/delay.h>
 
 /*
-DDRB stands for "Data Direction Register B", and it is a register that controls the direction of the I/O pins in Port B. Each bit of DDRB corresponds to one pin in Port B, and setting the bit to 1 makes the corresponding pin an output pin, while setting the bit to 0 makes the corresponding pin an input pin.
+PD2 is a bit position in the registers DDRD, PORTD, and PIND that correspond to a specific physical pin on the AVR microcontroller. In other words, PD2 represents the specific pin on Port D that you are interested in controlling or reading.
 
-PORTB stands for "Port B Output Register", and it is a register that controls the state of the output pins in Port B. Each bit of PORTB corresponds to one pin in Port B, and setting the bit to 1 makes the corresponding pin high (i.e., set to a logic level of 1), while setting the bit to 0 makes the corresponding pin low (i.e., set to a logic level of 0).
-
-PB0 is a specific pin in Port B, and it can be accessed by setting the appropriate bit in DDRB and PORTB registers. For example, to make PB0 an output pin, you would set the 0th bit of DDRB to 1, and to set PB0 to a logic high level, you would set the 0th bit of PORTB to 1.
-
-In summary, DDRB controls the direction of I/O pins in Port B, PORTB controls the state of the output pins in Port B, and PB0 is a specific pin in Port B that can be controlled by setting the appropriate bits in DDRB and PORTB registers.
+PIND, on the other hand, is a register that is used to read the state of the pins on Port D. The value of PIND reflects the current state of the input pins on Port D at the time the register is read. For example, if you want to read the state of the pin corresponding to PD2 on Port D, you can use the expression PIND & (1 << PD2) to read the value of PIND and check whether the bit corresponding to PD2 is set or not.
 */
 
-
-/*
-Le microcontrôleur utilise des registres pour contrôler les broches d'E/S. Le registre DDRB est un de ces registres, et il est utilisé pour configurer les directions des broches du port B (PB0-PB7). Si le bit correspondant est configuré en sortie, la broche correspondante est une broche de sortie, sinon elle est une broche d'entrée.
-
-Dans l'exemple de code, nous voulons configurer la broche PB0 du port B en sortie. Pour cela, nous utilisons une opération de décalage de bits (1 << PB0) pour obtenir la valeur 1 décalée de PB0 positions, ce qui nous donne la valeur binaire 00000001 avec le bit PB0 mis à 1. Ensuite, nous utilisons l'opérateur OR (|) pour combiner cette valeur avec le registre DDRB. L'opération OR conserve les bits de DDRB qui sont déjà à 1 et met à 1 le bit correspondant à la broche PB0. Enfin, nous stockons le résultat de l'opération OR dans le registre DDRB en utilisant l'opérateur d'affectation |=. Cela configure la broche PB0 du port B en sortie.
-
-|= est un opérateur d'affectation de bits qui combine le registre DDRB avec la valeur 1 décalée de PB0 à l'aide d'une opération OR. Cela signifie que le bit correspondant à la broche PB0 dans le registre DDRB est configuré en sortie (1) sans modifier les autres bits.
-
-En résumé, DDRB |= (1 << PB0) configure la broche PB0 du port B en sortie en configurant le bit correspondant dans le registre DDRB.
-*/
 
 int main() 
 {
     DDRB |= (1 << PB0);
+    // mettre en mode entree
+    DDRD |= (0 << PD2);
     
+    //Activer la resistance de pull-up pour PD2
     PORTD |= (1 << PD2);
     
     while (1)
     {
-        
-        if (PORTD = (1 << PD2))
+        if (!(PIND & (1 << PD2)))
         {
-            PORTB = (1 << PB0);
+            // Allumer la LED D1
+            PORTB |= (1 << PB0);
         }
-        // Allumer la LED D1
+        else
+        {
+            // If the result of the expression PIND & (1 << PD2) is not 0, that means the PD2 pin is high (i.e. the pushbutton is not being pressed), so the code sets the output state of the PB0 pin on Port B to low by writing a 0 to the corresponding bit in the PORTB register using the expression PORTB &= ~(1 << PB0).
+            PORTB &= ~(1 << PB0);
+        }
     }
 
 
 
     return 0;
 }
-
-
-//   DDRB |= (1 << PB0); // Mettre PB0 en mode sortie
-//     DDRD &= ~(1 << PD2); // Mettre PD2 en mode entrée
-//     PORTD |= (1 << PD2); // Activer la résistance de pull-up pour PD2
-
-//     while (1)
-//     {
-//         if (!(PIND & (1 << PD2))) // Vérifier si le bouton est enfoncé (niveau bas)
-//         {
-//             PORTB |= (1 << PB0); // Allumer la LED D1
-//         }
-//         else
-//         {
-//             PORTB &= ~(1 << PB0); // Éteindre la LED D1
-//         }
-//     }
-
-//     return 0;
