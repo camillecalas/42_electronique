@@ -39,10 +39,9 @@ int main(void)
         _delay_ms(300); 
 
         // Affichage de la valeur sur les LEDs seuls les bits 0 a 7 sont conserves pr PORTB et seuls les bits 0 a 3 sont conserves pour VALUE
-        PORTB = (PORTB & 0b11101000) | (value & 0b00000111) | ((value & 0b00001000 ) << 1);
+        PORTB = (PORTB & 0b11101000) | (value & 0b00010111);
     }
 
     return 0;
 
 }
-
